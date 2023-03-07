@@ -19,11 +19,9 @@ module.exports = (app) => {
 
   app.on("issue_comment.created", async (context) => {
     if (context.isBot) return;
-    app.log.info(context.payload.comment.body);
-    const issueComment = context.issue({
-      body: "Get It!",
-    });
-    context.octokit.issues.createComment(issueComment);
+    return context.octokit.issues.createComment(
+        context.issue({ body: "Ok!" })
+    );
 
   })
 
