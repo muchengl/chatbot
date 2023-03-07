@@ -22,9 +22,40 @@ module.exports = (app) => {
 
   app.on("issue_comment.created", async (context) => {
     if (context.isBot) return;
-    return context.octokit.issues.createComment(
-        context.issue({ body: "Ok!" })
-    );
+
+
+    if(context.payload.comment.body.startsWith(config.botName)){
+
+
+    }
+    else if(context.payload.comment.body.startsWith("/Bot")){
+
+      const configuration = new Configuration({
+        apiKey: config.chatGPTKey,
+      });
+      const openai = new OpenAIApi(configuration);
+
+      var msg=context.payload.comment.body.substring(4);
+
+      //app.log.info(msg);
+      const completion = await openai.createCompletion({
+        model: "text-davinci-003",
+        prompt:msg,
+        max_tokens: 1000
+      });
+      //app.log.info(completion);
+
+      const issueComment = context.issue({
+        body: completion.data.choices[0].text,
+      });
+
+      return context.octokit.issues.createComment(issueComment);
+    }
+
+
+    // return context.octokit.issues.createComment(
+    //     context.issue({ body: "Ok!" })
+    // );
 
   })
 
