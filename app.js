@@ -2,7 +2,6 @@
  * @param {import('probot').Probot} app
  */
 
-var config=require('./src/config.js');
 const { Configuration, OpenAIApi } = require("openai");
 const request = require('request');
 
